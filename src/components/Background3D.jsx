@@ -1,12 +1,21 @@
 import React from 'react'
 import Spline from '@splinetool/react-spline'
 
-const Background3D = ({ sceneUrl = 'https://prod.spline.design/EF7JOSsHLk16Tlw9/scene.splinecode' }) => {
+// More controllable background with stronger darkening and subtle vignette
+const Background3D = ({ sceneUrl = 'https://prod.spline.design/EF7JOSsHLk16Tlw9/scene.splinecode', darkness = 0.75 }) => {
+  const opacity = Math.min(Math.max(darkness, 0), 1)
   return (
     <div className="absolute inset-0 overflow-hidden">
       <Spline scene={sceneUrl} style={{ width: '100%', height: '100%' }} />
-      {/* Soft gradient overlay to improve text contrast without blocking Spline interaction */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
+      {/* Dark gradient overlay to ensure readable foreground content */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `radial-gradient(1200px 1200px at 50% 10%, rgba(0,0,0,${opacity * 0.4}) 0%, rgba(0,0,0,${opacity}) 70%)`
+        }}
+      />
+      {/* Additional film layer for consistency across scenes */}
+      <div className="pointer-events-none absolute inset-0 bg-black/30 mix-blend-multiply" />
     </div>
   )
 }
